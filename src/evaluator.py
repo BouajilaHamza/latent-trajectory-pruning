@@ -24,6 +24,28 @@ def is_correct(model_text: str, ground_truth_str: str) -> bool:
         return truth == model_ans
     return False
 
+def extract_ground_truth_math(answer_str: str) -> str:
+    """Extracts ground truth from MATH-500 format."""
+    matches = re.findall(r"\\boxed\{([^}]+)\}", answer_str)
+    if matches:
+        return matches[-1].strip().replace(",", "")
+    return answer_str.strip().replace(",", "")
+
+def is_correct_math(model_text: str, ground_truth_str: str) -> bool:
+    """Evaluates MATH-500 answers."""
+    truth = extract_ground_truth_math(ground_truth_str)
+    model_ans = extract_model_answer(model_text)
+    if truth and model_ans:
+        return truth == model_ans
+    return False
+
+def is_correct_gpqa(model_text: str, ground_truth_letter: str) -> bool:
+    """Evaluates GPQA answers by checking if the correct letter is chosen."""
+    matches = re.findall(r"correct option is \(([A-D])\)", model_text, re.IGNORECASE)
+    if matches:
+        return matches[-1].upper() == ground_truth_letter.upper()
+    return False
+
 if __name__ == "__main__":
     gt = "The man has 10 apples. #### 10"
     out1 = "Let's think. He has 5+5. The answer is \\boxed{10}."
