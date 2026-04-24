@@ -1,5 +1,6 @@
 from datasets import load_dataset
 from transformers import PreTrainedTokenizer
+import random
 
 def load_gsm8k_subset(split: str = "train", num_samples: int = 1000) -> list[dict]:
     """Loads a subset of the GSM8K dataset."""
@@ -14,7 +15,6 @@ def load_math500_subset(split: str = "test", num_samples: int = 500) -> list[dic
     dataset = dataset.select(range(min(num_samples, len(dataset))))
     return [{"question": item["problem"], "answer": item["solution"]} for item in dataset]
 
-import random
 
 def load_gpqa_subset(split: str = "train", num_samples: int = 100) -> list[dict]:
     """Loads a subset of the GPQA Diamond dataset (non-gated mirror)."""
