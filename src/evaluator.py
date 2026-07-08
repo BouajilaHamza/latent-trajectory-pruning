@@ -1,11 +1,13 @@
 import re
 
+
 def extract_ground_truth(answer_str: str) -> str:
     """Extracts the final numeric answer from the GSM8K ground truth string (after ####)."""
     parts = answer_str.split("####")
     if len(parts) > 1:
         return parts[1].strip().replace(",", "")
     return ""
+
 
 def extract_model_answer(text: str) -> str | None:
     """Extracts the content inside the last \boxed{} in the model's output."""
@@ -14,6 +16,7 @@ def extract_model_answer(text: str) -> str | None:
     if matches:
         return matches[-1].strip().replace(",", "")
     return None
+
 
 def is_correct(model_text: str, ground_truth_str: str) -> bool:
     """Returns True if the extracted model answer matches the ground truth."""
@@ -24,12 +27,14 @@ def is_correct(model_text: str, ground_truth_str: str) -> bool:
         return truth == model_ans
     return False
 
+
 def extract_ground_truth_math(answer_str: str) -> str:
     """Extracts ground truth from MATH-500 format."""
     matches = re.findall(r"\\boxed\{([^}]+)\}", answer_str)
     if matches:
         return matches[-1].strip().replace(",", "")
     return answer_str.strip().replace(",", "")
+
 
 def is_correct_math(model_text: str, ground_truth_str: str) -> bool:
     """Evaluates MATH-500 answers."""
@@ -39,6 +44,7 @@ def is_correct_math(model_text: str, ground_truth_str: str) -> bool:
         return truth == model_ans
     return False
 
+
 def is_correct_gpqa(model_text: str, ground_truth_letter: str) -> bool:
     """Evaluates GPQA answers by checking if the correct letter is chosen."""
     matches = re.findall(r"correct option is \(([A-D])\)", model_text, re.IGNORECASE)
@@ -46,10 +52,11 @@ def is_correct_gpqa(model_text: str, ground_truth_letter: str) -> bool:
         return matches[-1].upper() == ground_truth_letter.upper()
     return False
 
+
 if __name__ == "__main__":
     gt = "The man has 10 apples. #### 10"
     out1 = "Let's think. He has 5+5. The answer is \\boxed{10}."
     out2 = "Let's think. The answer is \\boxed{12}."
-    assert is_correct(out1, gt) == True
-    assert is_correct(out2, gt) == False
+    assert is_correct(out1, gt)
+    assert not is_correct(out2, gt)
     print("Evaluator tests passed.")

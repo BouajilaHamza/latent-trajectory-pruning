@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(pdftotext -layout \"/teamspace/studios/this_studio/research/geometry-of-control/Geometry of Control.pdf\" /tmp/goc.txt)",
+      "Read(//tmp/**)",
+      "Bash(pdftotext -layout \"/teamspace/studios/this_studio/research/geometry-of-control/Open_Semantic_Protocol.pdf\" /tmp/osp.txt)"
+    ]
+  }
+}
